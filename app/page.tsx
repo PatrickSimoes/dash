@@ -159,11 +159,11 @@ export default function Home() {
   const [admError, setAdmError] = useState(false);
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
   const viewport = useViewportSize();
-  const { ref: leadGridRef, size: leadGridSize } = useElementSize<HTMLDivElement>();
+  const { ref: leadAreaRef, size: leadAreaSize } = useElementSize<HTMLDivElement>();
   const { ref: leadCardRef, size: leadCardSize } = useElementSize<HTMLDivElement>();
-  const { ref: docGridRef, size: docGridSize } = useElementSize<HTMLDivElement>();
+  const { ref: docAreaRef, size: docAreaSize } = useElementSize<HTMLDivElement>();
   const { ref: docCardRef, size: docCardSize } = useElementSize<HTMLDivElement>();
-  const { ref: liberacaoGridRef, size: liberacaoGridSize } = useElementSize<HTMLDivElement>();
+  const { ref: liberacaoAreaRef, size: liberacaoAreaSize } = useElementSize<HTMLDivElement>();
   const { ref: liberacaoCardRef, size: liberacaoCardSize } = useElementSize<HTMLDivElement>();
 
   useEffect(() => {
@@ -269,7 +269,7 @@ export default function Home() {
       controller.abort();
       window.clearInterval(refresh);
     };
-  }, []);
+  }, [baseUrl]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -481,26 +481,29 @@ export default function Home() {
 
   const isShortHeight = viewport.height > 0 && viewport.height <= 900;
   const leadColumns = viewport.width >= 1024 ? 3 : viewport.width >= 768 ? 2 : 1;
-  const docColumns = isSingleDocCard ? 1 : viewport.width >= 1024 ? 2 : 1;
-  const liberacaoColumns = viewport.width >= 1024 ? 3 : 1;
+  const docColumns = isSingleDocCard ? 1 : viewport.width >= 1280 ? 2 : 1;
+  const liberacaoColumns = viewport.width >= 1280 ? 3 : viewport.width >= 1024 ? 2 : 1;
   const gridGap = isShortHeight ? 12 : 16;
 
   const leadCardHeight = getSafeHeight(leadCardSize.height, 280);
-  const leadRows = Math.max(1, Math.floor((leadGridSize.height + gridGap) / (leadCardHeight + gridGap)));
-  const leadPageSize = Math.max(1, Math.max(leadRows * leadColumns, closerTeam.length));
+  const leadAvailableHeight = getSafeHeight(leadAreaSize.height, viewport.height ? viewport.height - 260 : 720, 0);
+  const leadRows = Math.max(1, Math.floor((leadAvailableHeight + gridGap) / (leadCardHeight + gridGap)));
+  const leadPageSize = Math.max(1, leadRows * leadColumns);
   const closerPageCount = Math.max(1, Math.ceil(closerTeam.length / leadPageSize));
   const safeCloserPage = closerPage % closerPageCount;
   const closerPageItems = closerTeam.slice(safeCloserPage * leadPageSize, safeCloserPage * leadPageSize + leadPageSize);
 
-  const docCardHeight = getSafeHeight(docCardSize.height, 420);
-  const docRows = Math.max(1, Math.floor((docGridSize.height + gridGap) / (docCardHeight + gridGap)));
-  const docPageSize = Math.max(1, Math.min(docRows * docColumns, 2));
+  const docCardHeight = getSafeHeight(docCardSize.height, isSingleDocCard ? 460 : 400);
+  const docAvailableHeight = getSafeHeight(docAreaSize.height, viewport.height ? viewport.height - 240 : 720, 0);
+  const docRows = Math.max(1, Math.floor((docAvailableHeight + gridGap) / (docCardHeight + gridGap)));
+  const docPageSize = Math.max(1, Math.min(docRows * docColumns, docTeam.length || docRows * docColumns));
   const docPageCount = Math.max(1, Math.ceil(docTeam.length / docPageSize));
   const safeDocPage = docPage % docPageCount;
   const docPageItems = docTeam.slice(safeDocPage * docPageSize, safeDocPage * docPageSize + docPageSize);
 
-  const liberacaoCardHeight = getSafeHeight(liberacaoCardSize.height, 320);
-  const liberacaoRows = Math.max(1, Math.floor((liberacaoGridSize.height + gridGap) / (liberacaoCardHeight + gridGap)));
+  const liberacaoCardHeight = getSafeHeight(liberacaoCardSize.height, 280);
+  const liberacaoAvailableHeight = getSafeHeight(liberacaoAreaSize.height, viewport.height ? viewport.height - 420 : 560, 0);
+  const liberacaoRows = Math.max(1, Math.floor((liberacaoAvailableHeight + gridGap) / (liberacaoCardHeight + gridGap)));
   const liberacaoPageSize = Math.max(1, liberacaoRows * liberacaoColumns);
   const liberacaoPageCount = Math.max(1, Math.ceil(liberacaoStages.length / liberacaoPageSize));
   const safeLiberacaoPage = liberacaoPage % liberacaoPageCount;
@@ -621,14 +624,14 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex-1 min-h-0">
+              <div ref={leadAreaRef} className="flex-1 min-h-0">
                 {closerError ? (
                   <div className="flex h-full min-h-[220px] flex-col items-center justify-center gap-3 rounded-2xl border border-border/60 bg-card/50 text-center">
                     <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Dados nao encontrados</p>
                     <p className="text-2xl font-semibold text-foreground">Verifique a API do Closer</p>
                   </div>
                 ) : (
-                  <div ref={leadGridRef} className={cn("grid h-full content-start md:grid-cols-2 lg:grid-cols-3", isShortHeight ? "gap-3" : "gap-4")}>
+                  <div className={cn("grid h-full min-h-0 content-start md:grid-cols-2 lg:grid-cols-3", isShortHeight ? "gap-3" : "gap-4")}>
                     {closerPageItems.map((person, index) => (
                       <div
                         key={person.name}
@@ -671,13 +674,22 @@ export default function Home() {
                   <p className="text-2xl font-semibold text-foreground">Verifique a API da Documentacao</p>
                 </div>
               ) : (
-                <div className={cn("flex flex-1 min-h-0 flex-col", isShortHeight ? "gap-3" : "gap-4")}>
-                  <div ref={docGridRef} className={cn("grid h-full content-start", isSingleDocCard ? "lg:grid-cols-1" : "lg:grid-cols-2", isShortHeight ? "gap-3" : "gap-4")}>
+                <div
+                  ref={docAreaRef}
+                  className={cn("flex flex-1 min-h-0 flex-col", isShortHeight ? "gap-3" : "gap-4")}
+                >
+                  <div
+                    className={cn(
+                      "grid h-full min-h-0 content-start justify-items-stretch",
+                      isSingleDocCard ? "lg:grid-cols-1" : "lg:grid-cols-2",
+                      isShortHeight ? "gap-3" : "gap-4"
+                    )}
+                  >
                     {docPageItems.map((person, index) => (
                       <div
                         key={person.name}
                         ref={index === 0 ? docCardRef : undefined}
-                        className={cn("fade-up w-full", isSingleDocCard && "mx-auto max-w-2xl")}
+                        className={cn("fade-up w-full", isSingleDocCard && "lg:max-w-6xl")}
                         style={{ animationDelay: `${index * 90}ms` }}
                       >
                         <PersonDocCard
@@ -739,7 +751,14 @@ export default function Home() {
                 </div>
               ) : (
                 <div className={cn("flex flex-1 min-h-0 flex-col", isShortHeight ? "gap-3" : "gap-4")}>
-                  <div ref={liberacaoGridRef} className={cn("grid flex-1 min-h-0 content-start lg:grid-cols-3", isShortHeight ? "gap-3" : "gap-4")}>
+                  <div
+                    ref={liberacaoAreaRef}
+                    className={cn(
+                      "grid flex-1 min-h-0 content-start",
+                      viewport.width >= 1280 ? "lg:grid-cols-3" : viewport.width >= 1024 ? "lg:grid-cols-2" : "grid-cols-1",
+                      isShortHeight ? "gap-3" : "gap-4"
+                    )}
+                  >
                     {liberacaoPageItems.map((operation, index) => (
                       <div
                         key={operation.operationName}
