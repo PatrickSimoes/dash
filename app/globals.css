@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0f1d;
+  --foreground: #f8fafc;
+  --card: #12192b;
+  --muted: #0c1426;
+  --muted-foreground: #c4cfde;
+  --border: #1f2a44;
+  --primary: #4aa3ff;
+  --primary-foreground: #031023;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --destructive: #ef4444;
+  --meli: #f2c400;
+  --femsa: #e11d48;
+  --coracoes: #7a3e2e;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-destructive: var(--destructive);
+  --color-meli: var(--meli);
+  --color-femsa: var(--femsa);
+  --color-coracoes: var(--coracoes);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans);
+}
+
+html {
+  font-size: 18px;
+}
+
+@media (max-width: 1024px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.card-glow-meli {
+  box-shadow: 0 0 24px color-mix(in srgb, var(--color-meli) 35%, transparent);
+}
+
+.card-glow-femsa {
+  box-shadow: 0 0 24px color-mix(in srgb, var(--color-femsa) 28%, transparent);
+}
+
+.card-glow-coracoes {
+  box-shadow: 0 0 24px color-mix(in srgb, var(--color-coracoes) 28%, transparent);
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes screenGlow {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.fade-up {
+  animation: fadeUp 0.6s ease both;
+}
+
+.screen-glow {
+  animation: screenGlow 6s ease-in-out infinite;
+}
+
+.gauge-smooth {
+  shape-rendering: geometricPrecision;
+  text-rendering: geometricPrecision;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-up,
+  .screen-glow {
+    animation: none;
+  }
+}
