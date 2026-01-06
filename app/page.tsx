@@ -493,8 +493,8 @@ export default function Home() {
   const safeCloserPage = closerPage % closerPageCount;
   const closerPageItems = closerTeam.slice(safeCloserPage * leadPageSize, safeCloserPage * leadPageSize + leadPageSize);
 
-  const docCardHeight = getSafeHeight(docCardSize.height, isSingleDocCard ? 520 : 420);
-  const docAvailableHeight = getSafeHeight(docAreaSize.height, viewport.height ? viewport.height - 260 : 720, 0);
+  const docCardHeight = getSafeHeight(docCardSize.height, isSingleDocCard ? 460 : 400);
+  const docAvailableHeight = getSafeHeight(docAreaSize.height, viewport.height ? viewport.height - 240 : 720, 0);
   const docRows = Math.max(1, Math.floor((docAvailableHeight + gridGap) / (docCardHeight + gridGap)));
   const docPageSize = Math.max(1, Math.min(docRows * docColumns, docTeam.length || docRows * docColumns));
   const docPageCount = Math.max(1, Math.ceil(docTeam.length / docPageSize));
