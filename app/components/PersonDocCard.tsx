@@ -46,7 +46,7 @@ export const PersonDocCard = ({ name, photo, noPrazo, atrasados, total, clients,
             <div>
               <h3 className="text-base md:text-lg font-bold text-foreground">{name}</h3>
             </div>
-            <div className={`text-xl md:text-2xl font-black ${isOnTrack ? "text-success" : "text-destructive"}`}>{successRate}%</div>
+            <div className={`text-2xl md:text-3xl font-black ${isOnTrack ? "text-success" : "text-destructive"}`}>{successRate}%</div>
           </div>
 
           <div className="mt-3 md:mt-4">
@@ -61,16 +61,16 @@ export const PersonDocCard = ({ name, photo, noPrazo, atrasados, total, clients,
                     </div>
                     <div className="mt-2 grid grid-cols-3 gap-2">
                       <div className="rounded-lg border border-success/30 bg-success/10 p-2 text-center">
-                        <p className="text-base md:text-lg font-black text-success">{onTime}</p>
-                        <p className="text-[11px] text-muted-foreground">No prazo</p>
+                        <p className="text-lg md:text-xl font-black text-success">{onTime}</p>
+                        <p className="text-[11px] md:text-xs text-muted-foreground">No prazo</p>
                       </div>
                       <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-2 text-center">
-                        <p className="text-base md:text-lg font-black text-destructive">{client.outOfSla}</p>
-                        <p className="text-[11px] text-muted-foreground">Atrasados</p>
+                        <p className="text-lg md:text-xl font-black text-destructive">{client.outOfSla}</p>
+                        <p className="text-[11px] md:text-xs text-muted-foreground">Atrasados</p>
                       </div>
                       <div className="rounded-lg border border-primary bg-primary/10 p-2 text-center">
-                        <p className="text-base md:text-lg font-black text-primary">{client.total}</p>
-                        <p className="text-[11px] text-muted-foreground">Total</p>
+                        <p className="text-lg md:text-xl font-black text-primary">{client.total}</p>
+                        <p className="text-[11px] md:text-xs text-muted-foreground">Total</p>
                       </div>
                     </div>
                     <div className="mt-2">
@@ -100,15 +100,15 @@ export const PersonDocCard = ({ name, photo, noPrazo, atrasados, total, clients,
             <div className="grid grid-cols-3 gap-2 text-center text-[11px] md:text-xs">
               <div>
                 <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">Em dia</p>
-                <p className="text-lg md:text-xl font-black text-success">{noPrazo}</p>
+                <p className="text-xl md:text-2xl font-black text-success">{noPrazo}</p>
               </div>
               <div>
                 <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">Total</p>
-                <p className="text-lg md:text-xl font-black text-foreground">{total}</p>
+                <p className="text-xl md:text-2xl font-black text-foreground">{total}</p>
               </div>
               <div>
                 <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">Atrasados</p>
-                <p className="text-lg md:text-xl font-black text-destructive">{atrasados}</p>
+                <p className="text-xl md:text-2xl font-black text-destructive">{atrasados}</p>
               </div>
             </div>
           </div>
